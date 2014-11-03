@@ -48,6 +48,7 @@ require "logstash/namespace"
 # * "thing.max" - the maximum value seen for this metric
 # * "thing.stddev" - the standard deviation for this metric
 # * "thing.mean" - the mean for this metric
+# * "thing.sum" - the sum for this metric
 # * "thing.pXX" - the XXth percentile for this metric (see `percentiles`)
 #
 # #### Example: computing event rate
@@ -198,6 +199,7 @@ class LogStash::Filters::Metrics < LogStash::Filters::Base
       # timer's stddev currently returns variance, fix it.
       event["#{name}.stddev"] = metric.stddev ** 0.5
       event["#{name}.mean"] = metric.mean
+      event["#{name}.sum"] = metric.sum
 
       @percentiles.each do |percentile|
         event["#{name}.p#{percentile}"] = metric.snapshot.value(percentile / 100.0)
